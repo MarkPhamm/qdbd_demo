@@ -1,0 +1,37 @@
+sources:
+  - name: erp
+    schema: erp
+    description: Order CSVs loaded by scripts/load_raw.py.
+    tables:
+      - name: orders
+        columns:
+          - name: order_id
+            description: Stable key for the order. Lines and payments point here.
+          - name: customer_id
+            description: Person who placed the order. Matches crm.customers.
+          - name: order_date
+            description: Day the order was placed.
+          - name: status
+            description: placed, completed, or returned.
+      - name: order_items
+        columns:
+          - name: order_item_id
+            description: Stable key for one line on an order.
+          - name: order_id
+            description: Order this line belongs to.
+          - name: product_name
+            description: Product label on the line. The CSV has no product table.
+          - name: quantity
+            description: Units sold on this line.
+          - name: unit_price
+            description: Price charged per unit on this line.
+      - name: payments
+        columns:
+          - name: payment_id
+            description: Stable key for one payment.
+          - name: order_id
+            description: Order this payment settles. A placed order can have none yet.
+          - name: payment_method
+            description: card or cash.
+          - name: amount
+            description: Money taken on this payment.

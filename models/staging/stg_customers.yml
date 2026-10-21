@@ -1,0 +1,13 @@
+models:
+  - name: stg_customers
+    description: One row per customer from crm.customers.
+    columns:
+      - name: customer_id
+        description: Stable key from crm.customers.
+        data_tests:
+          - unique
+          - not_null
+      - name: first_name
+        description: Given name, passed through from the CRM source.
+      - name: last_name
+        description: Family name, passed through from the CRM source.

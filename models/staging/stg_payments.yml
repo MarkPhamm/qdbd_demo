@@ -1,0 +1,25 @@
+models:
+  - name: stg_payments
+    description: One row per payment. An order can have no payment yet.
+    columns:
+      - name: payment_id
+        description: Stable key for one payment.
+        data_tests:
+          - unique
+          - not_null
+      - name: order_id
+        description: Order this payment settles. Must exist on stg_orders.
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_orders')
+                field: order_id
+      - name: payment_method
+        description: card or cash.
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ["card", "cash"]
+      - name: amount
+        description: Money taken on this payment, cast to decimal(10, 2).

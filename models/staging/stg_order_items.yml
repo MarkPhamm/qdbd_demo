@@ -1,0 +1,23 @@
+models:
+  - name: stg_order_items
+    description: One row per line on an order.
+    columns:
+      - name: order_item_id
+        description: Stable key for one line.
+        data_tests:
+          - unique
+          - not_null
+      - name: order_id
+        description: Order this line belongs to. Must exist on stg_orders.
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_orders')
+                field: order_id
+      - name: product_name
+        description: Product label copied from the line.
+      - name: quantity
+        description: Units sold on this line.
+      - name: unit_price
+        description: Price per unit, cast to decimal(10, 2).

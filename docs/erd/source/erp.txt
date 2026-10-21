@@ -1,11 +1,13 @@
-orders
+# @dbt: ../../..
+
+"erp.orders" as orders
 ----
 order_id PK int
 customer_id int FK >- customers.customer_id
 order_date date
 status string
 
-order_items
+"erp.order_items" as order_items
 ----
 order_item_id PK int
 order_id int FK >- orders.order_id
@@ -13,7 +15,7 @@ product_name string
 quantity int
 unit_price decimal(10,2)
 
-payments
+"erp.payments" as payments
 ----
 payment_id PK int
 order_id int FK >- orders.order_id

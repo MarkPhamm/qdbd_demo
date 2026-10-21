@@ -1,0 +1,19 @@
+models:
+  - name: fct_orders
+    description: One row per order, with the line count and line total.
+    columns:
+      - name: order_id
+        description: Grain of this fact. Line and payment facts point here.
+        data_tests:
+          - unique
+          - not_null
+      - name: customer_id
+        description: Who placed the order. Matches dim_customers.
+      - name: order_date
+        description: Day the order was placed. Matches dim_dates.date_day.
+      - name: status
+        description: placed, completed, or returned.
+      - name: line_count
+        description: Number of order lines, not units sold.
+      - name: order_total
+        description: Sum of quantity times unit_price across the order's lines.

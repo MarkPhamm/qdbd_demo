@@ -1,20 +1,20 @@
 {
   "tables": {
-    "customers": {
-      "x": 0,
-      "y": 359
-    },
-    "order_items": {
-      "x": 308,
+    "crm.customers": {
+      "x": 679,
       "y": 0
     },
-    "orders": {
-      "x": 265,
-      "y": 270
+    "erp.order_items": {
+      "x": 0,
+      "y": 347
     },
-    "payments": {
-      "x": 435,
-      "y": 455
+    "erp.orders": {
+      "x": 215,
+      "y": 181
+    },
+    "erp.payments": {
+      "x": 365,
+      "y": 0
     }
   },
   "version": 1

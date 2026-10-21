@@ -1,0 +1,25 @@
+{
+  "tables": {
+    "dim_customers": {
+      "x": 209,
+      "y": 771
+    },
+    "dim_dates": {
+      "x": 0,
+      "y": 775
+    },
+    "fct_order_items": {
+      "x": 0,
+      "y": 403
+    },
+    "fct_orders": {
+      "x": 228,
+      "y": 220
+    },
+    "fct_payments": {
+      "x": 445,
+      "y": 0
+    }
+  },
+  "version": 1
+}

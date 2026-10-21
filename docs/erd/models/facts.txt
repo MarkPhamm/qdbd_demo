@@ -1,0 +1,30 @@
+# @dbt: ../../..
+
+fct_orders
+----
+order_id PK int
+customer_id int FK >- dim_customers.customer_id
+order_date date FK >- dim_dates.date_day
+status string
+line_count int
+order_total decimal(10,2)
+
+fct_order_items
+----
+order_item_id PK int
+order_id int FK >- fct_orders.order_id
+customer_id int FK >- dim_customers.customer_id
+order_date date FK >- dim_dates.date_day
+product_name string
+quantity int
+unit_price decimal(10,2)
+line_amount decimal(10,2)
+
+fct_payments
+----
+payment_id PK int
+order_id int FK >- fct_orders.order_id
+customer_id int FK >- dim_customers.customer_id
+order_date date FK >- dim_dates.date_day
+payment_method string
+amount decimal(10,2)

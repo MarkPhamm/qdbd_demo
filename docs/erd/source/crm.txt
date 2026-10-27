@@ -1,7 +1,5 @@
-Customer as c
----
-CustomerId PK int
-Name string
-Email string UNIQUE
-
-
+customers
+----
+customer_id PK int
+first_name string
+last_name string

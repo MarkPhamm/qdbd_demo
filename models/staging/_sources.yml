@@ -1,0 +1,13 @@
+sources:
+  - name: crm
+    schema: crm
+    description: Customer CSV loaded by scripts/load_raw.py.
+    tables:
+      - name: customers
+  - name: erp
+    schema: erp
+    description: Order CSVs loaded by scripts/load_raw.py.
+    tables:
+      - name: orders
+      - name: order_items
+      - name: payments

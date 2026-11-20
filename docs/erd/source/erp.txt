@@ -1,0 +1,20 @@
+OrderItem as oi
+----
+OrderItemId PK int
+OrderId int FK >- Order.OrderId
+ProductId int FK >- Product.ProductId
+Quantity int
+UnitPrice decimal(10,2)
+
+Order as o
+----
+OrderId PK int(64)
+CustomerId int FK >- Customer.CustomerId
+OrderDate datetime
+Total decimal(10,2)
+
+Product as p
+----
+ProductId PK int
+Name string
+Price decimal(10,2)

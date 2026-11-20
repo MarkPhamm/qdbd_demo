@@ -1,0 +1,7 @@
+Customer as c
+---
+CustomerId PK int
+Name string
+Email string UNIQUE
+
+

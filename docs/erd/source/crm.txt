@@ -1,4 +1,6 @@
-customers
+# @dbt: ../../..
+
+"crm.customers" as customers
 ----
 customer_id PK int
 first_name string

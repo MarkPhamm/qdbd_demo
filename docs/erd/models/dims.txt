@@ -1,0 +1,15 @@
+# @dbt: ../../..
+
+dim_customers
+----
+customer_id PK int
+first_name string
+last_name string
+full_name string
+
+dim_dates
+----
+date_day PK date
+year int
+month int
+day int

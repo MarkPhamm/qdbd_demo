@@ -1,0 +1,15 @@
+models:
+  - name: dim_customers
+    description: One row per customer.
+    columns:
+      - name: customer_id
+        description: Stable key from crm.customers. Every fact joins on this.
+        data_tests:
+          - unique
+          - not_null
+      - name: first_name
+        description: Given name as loaded from the CRM CSV.
+      - name: last_name
+        description: Family name as loaded from the CRM CSV.
+      - name: full_name
+        description: first_name and last_name joined with a space, for display.

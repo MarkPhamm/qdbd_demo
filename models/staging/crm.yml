@@ -1,0 +1,13 @@
+sources:
+  - name: crm
+    schema: crm
+    description: Customer CSV loaded by scripts/load_raw.py.
+    tables:
+      - name: customers
+        columns:
+          - name: customer_id
+            description: Stable key for the person. Facts and the customer dimension copy it.
+          - name: first_name
+            description: Given name as it arrived in the CRM CSV.
+          - name: last_name
+            description: Family name as it arrived in the CRM CSV.

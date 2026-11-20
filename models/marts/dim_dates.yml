@@ -1,0 +1,15 @@
+models:
+  - name: dim_dates
+    description: One row per day from the first order date through the last.
+    columns:
+      - name: date_day
+        description: Calendar day. Facts join here through order_date.
+        data_tests:
+          - unique
+          - not_null
+      - name: year
+        description: Calendar year of date_day.
+      - name: month
+        description: Month number of date_day, 1 through 12.
+      - name: day
+        description: Day of month of date_day.

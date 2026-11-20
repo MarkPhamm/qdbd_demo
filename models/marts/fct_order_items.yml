@@ -1,0 +1,23 @@
+models:
+  - name: fct_order_items
+    description: One row per order line.
+    columns:
+      - name: order_item_id
+        description: Grain of this fact, one row per line.
+        data_tests:
+          - unique
+          - not_null
+      - name: order_id
+        description: Order this line belongs to. Matches fct_orders.
+      - name: customer_id
+        description: Customer on the parent order, repeated here so the line can join without the order.
+      - name: order_date
+        description: Date of the parent order, repeated here for the same reason.
+      - name: product_name
+        description: Product label copied from the line. There is no product dimension.
+      - name: quantity
+        description: Units sold on this line.
+      - name: unit_price
+        description: Price charged per unit on this line.
+      - name: line_amount
+        description: quantity times unit_price.

@@ -13,6 +13,8 @@ sources:
             description: Day the order was placed.
           - name: status
             description: placed, completed, or returned.
+          - name: channel
+            description: Where the order was placed, such as store or web.
       - name: order_items
         columns:
           - name: order_item_id

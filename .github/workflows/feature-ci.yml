@@ -1,0 +1,28 @@
+# Feature CI. A pull request into qa. Check only: fail on schema errors
+# and on dbt drift. The diagram preview is feature-cd.yml.
+
+name: feature CI
+
+on:
+  pull_request:
+    branches: [qa]
+
+concurrency:
+  group: feature-ci-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  erd:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: MarkPhamm/quickdbd-cli@v0.6.11
+        with:
+          path: docs/erd/*/
+          strict: "true"
+          comment: "false"
+          upload-artifact: "false"
+          qdbd-version: "0.6.11"

@@ -1,0 +1,123 @@
+# One GitHub Pages site.
+# /        main, as it is
+# /pr/N/   open pull request N, coloured against the branch it merges into
+#
+# Runs on the default branch after feature CD, release CI, or a push to main.
+# Each deploy rebuilds prod and every open pull request, so one deploy does
+# not wipe the others. A closed pull request disappears on the next deploy.
+
+name: pages
+
+on:
+  workflow_run:
+    workflows: ["feature CD", "release CI", "release CD"]
+    types: [completed]
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    if: >-
+      github.event.workflow_run.conclusion == 'success' &&
+      (github.event.workflow_run.event == 'pull_request' ||
+       github.event.workflow_run.head_branch == 'main')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install qdbd
+        run: pip install "quickdbd-cli==0.6.11"
+
+      - name: Build prod and open pull request demos
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p site/pr envs
+          git fetch --no-tags origin main
+          git worktree add --detach envs/main origin/main
+          (cd envs/main && qdbd build --strict docs/erd/*/ --site "$GITHUB_WORKSPACE/site")
+
+          : > "$RUNNER_TEMP/pr-lines.html"
+          while IFS=$'\t' read -r num base; do
+            [ -n "${num}" ] || continue
+            [[ "$num" =~ ^[0-9]+$ ]] || continue
+            [[ "$base" =~ ^[A-Za-z0-9._/-]+$ ]] || continue
+            git fetch --no-tags origin "refs/pull/${num}/head"
+            git worktree add --detach "envs/pr-${num}" FETCH_HEAD
+            git fetch --no-tags origin "+refs/heads/${base}:refs/remotes/origin/${base}"
+            if (cd "envs/pr-${num}" && qdbd build --strict docs/erd/*/ --site "$GITHUB_WORKSPACE/site/pr/${num}" --diff-base "origin/${base}"); then
+              printf '<li><a href="%s/">%s</a> against %s</li>\n' "$num" "$num" "$base" >> "$RUNNER_TEMP/pr-lines.html"
+            else
+              printf '<li>%s against %s failed the schema check</li>\n' "$num" "$base" >> "$RUNNER_TEMP/pr-lines.html"
+            fi
+          done < <(gh pr list --state open --limit 100 --json number,baseRefName --jq '.[] | [.number, .baseRefName] | @tsv')
+
+          cat > site/pr/index.html << EOF
+          <!DOCTYPE html>
+          <html lang="en">
+          <head><meta charset="utf-8"><title>Pull request diagrams</title></head>
+          <body>
+          <h1>Pull request diagrams</h1>
+          <ul>
+          $(cat "$RUNNER_TEMP/pr-lines.html")
+          </ul>
+          </body>
+          </html>
+          EOF
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+      pull-requests: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - id: deploy
+        uses: actions/deploy-pages@v4
+
+      - name: Comment the demo link
+        if: github.event.workflow_run.event == 'pull_request'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_ID: ${{ github.event.workflow_run.id }}
+          PAGE_URL: ${{ steps.deploy.outputs.page_url }}
+        run: |
+          set -euo pipefail
+          n=$(gh api "repos/${GITHUB_REPOSITORY}/actions/runs/${RUN_ID}" --jq '.pull_requests[0].number // empty')
+          if [ -z "$n" ]; then
+            echo "No pull request number on the triggering run."
+            exit 0
+          fi
+          marker="<!-- qdbd-pr-demo -->"
+          body=$(printf '%s\nDiagram of what this pull request changes: %s/pr/%s/\n' "$marker" "${PAGE_URL%/}" "$n")
+          ids=$(gh api "repos/${GITHUB_REPOSITORY}/issues/${n}/comments" --paginate \
+            --jq ".[] | select(.body | startswith(\"${marker}\")) | .id")
+          id=${ids%%$'\n'*}
+          if [ -n "$id" ]; then
+            gh api -X PATCH "repos/${GITHUB_REPOSITORY}/issues/comments/${id}" -f body="$body" >/dev/null
+          else
+            gh api "repos/${GITHUB_REPOSITORY}/issues/${n}/comments" -f body="$body" >/dev/null
+          fi

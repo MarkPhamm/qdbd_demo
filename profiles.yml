@@ -1,0 +1,8 @@
+qdbd_demo:
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      path: data/qdbd.duckdb
+      schema: main
+      threads: 1

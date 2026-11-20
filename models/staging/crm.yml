@@ -11,3 +11,5 @@ sources:
             description: Given name as it arrived in the CRM CSV.
           - name: last_name
             description: Family name as it arrived in the CRM CSV.
+          - name: city
+            description: City the customer gave to the CRM.

@@ -1,20 +1,21 @@
-OrderItem as oi
+orders
 ----
-OrderItemId PK int
-OrderId int FK >- Order.OrderId
-ProductId int FK >- Product.ProductId
-Quantity int
-UnitPrice decimal(10,2)
+order_id PK int
+customer_id int FK >- customers.customer_id
+order_date date
+status string
 
-Order as o
+order_items
 ----
-OrderId PK int(64)
-CustomerId int FK >- Customer.CustomerId
-OrderDate datetime
-Total decimal(10,2)
+order_item_id PK int
+order_id int FK >- orders.order_id
+product_name string
+quantity int
+unit_price decimal(10,2)
 
-Product as p
+payments
 ----
-ProductId PK int
-Name string
-Price decimal(10,2)
+payment_id PK int
+order_id int FK >- orders.order_id
+payment_method string
+amount decimal(10,2)

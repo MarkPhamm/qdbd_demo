@@ -1,20 +1,20 @@
 {
   "tables": {
-    "Customer": {
+    "customers": {
       "x": 0,
+      "y": 359
+    },
+    "order_items": {
+      "x": 308,
       "y": 0
     },
-    "Order": {
-      "x": 238,
-      "y": 56
+    "orders": {
+      "x": 265,
+      "y": 270
     },
-    "OrderItem": {
-      "x": 465,
-      "y": 124
-    },
-    "Product": {
-      "x": 709,
-      "y": 240
+    "payments": {
+      "x": 435,
+      "y": 455
     }
   },
   "version": 1

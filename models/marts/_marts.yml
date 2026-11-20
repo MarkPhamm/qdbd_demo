@@ -1,0 +1,36 @@
+models:
+  - name: dim_customers
+    description: One row per customer.
+    columns:
+      - name: customer_id
+        data_tests:
+          - unique
+          - not_null
+  - name: dim_dates
+    description: One row per day from the first order date through the last.
+    columns:
+      - name: date_day
+        data_tests:
+          - unique
+          - not_null
+  - name: fct_orders
+    description: One row per order, with the line count and line total.
+    columns:
+      - name: order_id
+        data_tests:
+          - unique
+          - not_null
+  - name: fct_order_items
+    description: One row per order line.
+    columns:
+      - name: order_item_id
+        data_tests:
+          - unique
+          - not_null
+  - name: fct_payments
+    description: One row per payment. Order 4 has none because it is still placed.
+    columns:
+      - name: payment_id
+        data_tests:
+          - unique
+          - not_null

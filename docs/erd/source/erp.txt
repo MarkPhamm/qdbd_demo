@@ -6,6 +6,7 @@ order_id PK int
 customer_id int FK >- customers.customer_id
 order_date date
 status string
+channel string
 
 "erp.order_items" as order_items
 ----

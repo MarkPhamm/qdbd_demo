@@ -1,0 +1,9 @@
+repos:
+  - repo: https://github.com/MarkPhamm/quickdbd-cli
+    rev: v0.6.11
+    hooks:
+      - id: qdbd-check
+        # A foreign key points at another file in the same folder, so check
+        # each diagram as a whole.
+        args: [--each, --strict, docs/erd/source, docs/erd/models]
+        pass_filenames: false
